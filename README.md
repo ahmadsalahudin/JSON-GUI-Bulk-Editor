@@ -11,9 +11,10 @@ Tkinter GUI App, to bulk delete JSON elements, delete specific values, delete nu
 <li> Use multiple ways to delete JSON elements that applies to all the files at once.</li>
 <li> To save changes to the JSON files, click File ---> Save </li>
 </ol>
+
 > **_NOTE:_**:  All deleted elements are logged inside the deletion log - to save a copy of the log to your HDD - Click Log --> Save
 
-## Features:
+## Features
 
 ### Delete Node:
 Select a node from the treeview, and click "Delete Node" to delete the node and all its values - works mostly for parent nodes.
@@ -26,10 +27,8 @@ Deletes all null or zero values within all the nodes in all the files.
 ### Delete Specific Value:
 Enter the key you want to delete - case-sensitive - and if it is found, it is deleted from all the JSON files.
 
-## Screenshot:
+## Screenshot
 ![Screenshot](bulk.PNG)
-
-
 
 ## Features to be added:
 <ol>
