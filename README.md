@@ -26,6 +26,11 @@ Deletes all null or zero values within all the nodes in all the files.
 ### Delete Specific Value:
 Enter the key you want to delete - case-sensitive - and if it is found, it is deleted from all the JSON files.
 
+## Screenshot:
+![Screenshot](batch.png)
+
+
+
 ## Features to be added:
 <ol>
 <li>Apply deletions to specific files.</li> 
