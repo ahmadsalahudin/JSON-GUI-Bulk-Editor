@@ -6,11 +6,12 @@ Tkinter GUI App, to bulk delete JSON elements, delete specific values, delete nu
 <li>Open exe file, or run python file.</li>
 <li>Click File --> Open</li> 
 <li>Choose the JSON directory you want to load - JSON files must have an identical structure.</li>
-</ol>
-  The first JSON file is loaded and is used as the basis for the rest of the files.
-Now, you have multiple ways to delete JSON elements that applies to all the files at once.
 
-> **_NOTE:_** All deleted elements are saved inside the deletion log - to save a copy of the log to your HDD - Click Log --> Save
+  The first JSON file is loaded and is used as the basis for the rest of the files.
+<li> Use multiple ways to delete JSON elements that applies to all the files at once.</li>
+<li> To save changes to the JSON files, click File ---> Save </li>
+</ol>
+> **_NOTE:_** All deleted elements are logged inside the deletion log - to save a copy of the log to your HDD - Click Log --> Save
 
 ## Features:
 
