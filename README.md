@@ -26,6 +26,8 @@ Note: If you have used this once, and use another feature like delete node, it c
 Enter the key you want to delete - case-sensitive - and if it is found, it is deleted from all the JSON files.
 
 ## Features to be added:
-Ability to choose which files to apply deletion 
-Add Nodes
-Update Nodes
+<ol>
+<li>Apply deletions to specific files.</li> 
+<li>Insert Nodes.</li>
+<li>Update Nodes</li>
+</ol>
