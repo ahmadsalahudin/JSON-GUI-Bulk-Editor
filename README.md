@@ -2,12 +2,13 @@
 Tkinter GUI App, to bulk delete JSON elements, delete specific values, delete null and zero values, and delete selected nodes in all Loaded JSON files.
 
 ## Usage:
-
-1.Open exe file, or run python file.
-2.Click File --> Open 
-3.Choose the JSON directory you want to load - JSON files must have an identical structure.
-The first JSON file is loaded and is used as the basis for the rest of the files.
-Now, you have multiple ways to delete nodes within the JSON files.
+<ol>
+<li>Open exe file, or run python file.</li>
+<li>Click File --> Open</li> 
+<li>Choose the JSON directory you want to load - JSON files must have an identical structure.</li>
+</ol>
+  The first JSON file is loaded and is used as the basis for the rest of the files.
+Now, you have multiple ways to delete JSON elements that applies to all the files at once.
 
 All deleted elements are saved inside the deletion log - to save a copy of the log to your HDD - Click Log --> Save
 
@@ -25,5 +26,6 @@ Note: If you have used this once, and use another feature like delete node, it c
 Enter the key you want to delete - case-sensitive - and if it is found, it is deleted from all the JSON files.
 
 ## Features to be added:
+Ability to choose which files to apply deletion 
 Add Nodes
 Update Nodes
