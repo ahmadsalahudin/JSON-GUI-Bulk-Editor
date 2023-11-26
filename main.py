@@ -169,7 +169,7 @@ class Application(tk.Frame):
     def save_json_files(self):
         for file_path, json_file in zip(self.file_paths, self.json_files):
             with open(file_path, 'w', encoding='utf-8') as f:
-                json.dump(json_file, f, indent=4)
+                json.dump(json_file, f, ensure_ascii=False, indent=4)
         self.status_bar.config(text="JSON Files Saved")
 
     def remove_null_or_zero(self):
@@ -251,7 +251,7 @@ class Application(tk.Frame):
         directory = os.path.dirname(self.file_paths[0])
         log_file_path = os.path.join(directory, "deletion_log.txt")
 
-        with open(log_file_path, "w") as file:
+        with open(log_file_path, "w", encoding='utf-8') as file:
             for count, entry in enumerate(self.deletion_log, 1):
                 log_entry = f"{count}. File: {entry['file']}, Path: {' > '.join(entry['key_path'])}, Deleted Value: {entry['value']}\n"
                 file.write(log_entry)
