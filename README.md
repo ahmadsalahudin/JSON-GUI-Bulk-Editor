@@ -24,6 +24,9 @@ Select a node from the treeview, and click "Delete Node" to delete the node and 
 Deletes all null or zero values within all the nodes in all the files.
 > **_NOTE:_** If you have used this once, and use another feature like delete node, it can lead to deleting nodes that aren't the same, it is better to delete all the nodes you want first, then use this feature in the end.
 
+### If Null Del Key:
+Deletes all null or zero or "0" or "00" or "" or [] values & keys within all the nodes in all the files.
+
 ### Delete Specific Value:
 Enter the key you want to delete - case-sensitive - and if it is found, it is deleted from all the JSON files.
 
