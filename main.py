@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, simpledialog
 import json
@@ -61,6 +60,10 @@ class Application(tk.Frame):
           # IfNullDel Button
         self.ifnulldel_button = tk.Button(self, text="If Null Delete", command=self.remove_null_or_zero, bg='#004080', fg='#ffffff')
         self.ifnulldel_button.pack(side="top")
+        
+          #IfNullDelKey Button
+        self.ifnulldelkey_button = tk.Button(self, text="IfNullDelKey", command=self.remove_null_or_zero_key, bg='#004080', fg='#ffffff')
+        self.ifnulldelkey_button.pack(side="top")
 
         # Button to delete a specific key
         self.delete_key_button = tk.Button(self, text="Delete Specific Key", command=self.delete_specific_key, bg='#004080', fg='#ffffff')
@@ -166,6 +169,7 @@ class Application(tk.Frame):
             elif isinstance(node, list) and key.isdigit() and int(key) < len(node):
                 self.delete_key_from_path(node[int(key)], key_path[1:], file_path)
 
+        
     def save_json_files(self):
         for file_path, json_file in zip(self.file_paths, self.json_files):
             with open(file_path, 'w', encoding='utf-8') as f:
@@ -176,37 +180,72 @@ class Application(tk.Frame):
         if not self.json_files:
             messagebox.showwarning("Warning", "No JSON files loaded.")
             return
-        if self.null_or_zero_removed:
-            response = messagebox.askyesno("Warning", "This operation has already been run. Do you want to run it again?")
-            if not response:
-                return
-        for json_file, file_path in zip(self.json_files, self.file_paths):
-            self.remove_null_or_zero_recursive(json_file, file_path)
-        self.update_tree()
-        self.status_bar.config(text="Removed null or zero value elements from all JSON files.")
-        self.null_or_zero_removed = True
+
+        confirmation = messagebox.askyesno("Confirm", "This will delete all 'null', '0', '0' string, and '00' string values from the loaded JSON files. Do you want to proceed?")
+        if confirmation:
+            for json_file, file_path in zip(self.json_files, self.file_paths):
+                self.remove_null_or_zero_recursive(json_file, file_path)
+            self.update_tree()
+            self.status_bar.config(text="Removed null, zero, '0', and '00' string values from all JSON files.")
 
     def remove_null_or_zero_recursive(self, node, file_path, parent_key=None):
         if isinstance(node, dict):
-            keys_to_delete = [key for key, value in node.items() if value == 0 or value is None]
+            keys_to_delete = [key for key, value in node.items() if value in (0, None, "0", "00")]
             for key in keys_to_delete:
-                # Log the deletion
                 key_to_log = (parent_key + [key]) if parent_key else [key]
                 self.log_deletion(file_path, key_to_log, node[key])
                 del node[key]
-            for key, value in node.items():
+            for key, value in list(node.items()):
                 self.remove_null_or_zero_recursive(value, file_path, parent_key=(parent_key + [key]) if parent_key else [key])
+
         elif isinstance(node, list):
-            # Handle list elements
-            for i in range(len(node) - 1, -1, -1):  # Iterate in reverse to avoid index errors
-                value = node[i]
-                if value == 0 or value is None:
-                    # Log the deletion
+            indices_to_delete = [i for i, value in enumerate(node) if value in (0, None, "0", "00")]
+            for i in sorted(indices_to_delete, reverse=True):
+                key_to_log = (parent_key + [str(i)]) if parent_key else [str(i)]
+                self.log_deletion(file_path, key_to_log, node[i])
+                del node[i]
+            for i, value in enumerate(node):
+                self.remove_null_or_zero_recursive(value, file_path, parent_key=(parent_key + [str(i)]) if parent_key else [str(i)])
+
+
+    def remove_null_or_zero_key(self):
+        if not self.json_files:
+            messagebox.showwarning("Warning", "No JSON files loaded.")
+            return
+
+        confirmation = messagebox.askyesno("Confirm", "This will delete keys with 'null', '0', '0' string, and '00' string values from the loaded JSON files. Do you want to proceed?")
+        if confirmation:
+            for json_file, file_path in zip(self.json_files, self.file_paths):
+                self.remove_null_or_zero_key_recursive(json_file, file_path)
+
+            # Update the Treeview to reflect changes
+            self.update_tree()
+            self.status_bar.config(text="Removed keys with null, zero, '0', and '00' string values from all JSON files.")
+
+
+    def remove_null_or_zero_key_recursive(self, node, file_path, parent_key=None):
+        if isinstance(node, dict):
+            keys_to_delete = [key for key, value in node.items() if value in (0, None, [], "", "0", "00")]
+            for key in keys_to_delete:
+                key_to_log = (parent_key + [key]) if parent_key else [key]
+                self.log_deletion(file_path, key_to_log, node[key])
+                del node[key]
+
+            # Recursively call for nested structures, updating the dictionary as you go
+            for key, value in list(node.items()):
+                self.remove_null_or_zero_key_recursive(value, file_path, parent_key=(parent_key + [key]) if parent_key else [key])
+
+        elif isinstance(node, list):
+            # Handle list items
+            for i in range(len(node) - 1, -1, -1):
+                if node[i] in (0, None, "", [], "0", "00"):
                     key_to_log = (parent_key + [str(i)]) if parent_key else [str(i)]
-                    self.log_deletion(file_path, key_to_log, value)
+                    self.log_deletion(file_path, key_to_log, node[i])
                     del node[i]
                 else:
-                    self.remove_null_or_zero_recursive(value, file_path, parent_key=(parent_key + [str(i)]) if parent_key else [str(i)])
+                    self.remove_null_or_zero_key_recursive(node[i], file_path, parent_key=(parent_key + [str(i)]) if parent_key else [str(i)])
+
+
 
     def log_deletion(self, file_path, key_path, value=None):
         # Record the deletion
@@ -258,7 +297,6 @@ class Application(tk.Frame):
 
         self.status_bar.config(text=f"Deletion log saved to {log_file_path}.")
 
-
     def delete_specific_key(self):
         if not self.json_files:
             messagebox.showwarning("Warning", "No JSON files loaded.")
@@ -266,16 +304,19 @@ class Application(tk.Frame):
 
         key_to_delete = simpledialog.askstring("Input", "Enter key to delete", parent=self.master)
         if key_to_delete:
-            key_found = False
-            for json_file, file_path in zip(self.json_files, self.file_paths):
-                if self.delete_key_recursive(json_file, key_to_delete, file_path):
-                    key_found = True
-            self.update_tree()
+            confirmation = messagebox.askyesno("Confirm", f"Are you sure you want to delete the key '{key_to_delete}' from all JSON files?")
+            if confirmation:
+                key_found = False
+                for json_file, file_path in zip(self.json_files, self.file_paths):
+                    if self.delete_key_recursive(json_file, key_to_delete, file_path):
+                        key_found = True
 
-            if key_found:
-                self.status_bar.config(text=f"Deleted key '{key_to_delete}' from all JSON files.")
-            else:
-                messagebox.showinfo("Info", f"No match was found for key '{key_to_delete}'.")
+                if key_found:
+                    self.update_tree()
+                    self.status_bar.config(text=f"Deleted key '{key_to_delete}' from all JSON files.")
+                else:
+                    messagebox.showinfo("Info", f"No match was found for key '{key_to_delete}'.")
+ 
 
 
     def delete_key_recursive(self, node, key_to_delete, file_path, parent_key=None):
